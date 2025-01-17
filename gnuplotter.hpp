@@ -63,6 +63,6 @@ public:
 	 */
 	void show() {
 		system("gnuplot -p dat.gnu");
-		// this->DeleteScript();
+		this->DeleteScript();
 	}
 };
