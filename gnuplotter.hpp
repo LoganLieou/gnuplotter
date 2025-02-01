@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <cstdio>
 
 class Plot {
 private:
@@ -24,7 +23,7 @@ public:
 	 */
 	void InitPlot2D() {
 		std::ofstream outfile(filename);
-		outfile << "plot 'data1.dat'\n";
+		outfile << "set title \"" << this->title << "\"" << std::endl;
 		outfile.close();
 	}
 
@@ -32,6 +31,7 @@ public:
 	 * 2D scatter plot function, which is the fundemental 2D plot
 	 */
 	void ScatterPlot2D(std::vector<double> x, std::vector<double> y) {
+		this->InitPlot2D();
 		std::ofstream outfile(data_file);
 		if (x.size() != y.size()) {
 			std::cerr << "ERROR: mismatched dims!\n";
@@ -42,8 +42,30 @@ public:
 		}
 		outfile.close();
 
-		// TODO this needs to make more logical sense
-		this->InitPlot2D();
+		// add the data file to the main plot script
+		outfile.open(filename, std::ios::app);
+		outfile << "plot 'data1.dat'\n";
+	}
+
+	/**
+	 * Plotting boxplots overtime this is pretty good for dealing with timeseries
+	 * trading data where a bunch of orders were filled overtime
+	 * 
+	 * TODO finish this not sure how the boxplot works in gnuplot
+	 */
+	void CandleStickPlot(std::vector<std::vector<double> > data) {
+		std::ofstream outfile(data_file);
+		for (int i = 0; i < data[0].size(); ++i) {
+			for (int j = 0; j < data.size(); ++j) {
+				outfile << data[j][i] << "\t";
+			}
+			outfile << "\n";
+		}
+		outfile.close();
+
+		outfile.open(filename);
+		outfile << "set boxwidth 0.2\n";
+		outfile << "plot '" << data_file << "' with candlesticks\n";
 	}
 
 	/**
