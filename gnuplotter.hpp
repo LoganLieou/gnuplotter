@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 
@@ -66,6 +67,51 @@ public:
 		outfile.open(filename);
 		outfile << "set boxwidth 0.2\n";
 		outfile << "plot '" << data_file << "' with candlesticks\n";
+	}
+
+	/**
+	 * Plot a histogram, I was thinking this seemed pretty useful, as I was
+	 * randomly generating some values and wanted to see what the distribution
+	 * look liked. Data is 1D in a histogram i.e. freq data, I mean... this
+	 * technically works I guess
+	 *
+	 * TODO bins
+	 */
+	void Histogram(std::vector<double> data) {
+		std::ofstream outfile(data_file);
+		for (int i = 0; i < data.size(); ++i) {
+			outfile << data[i] << "\n";
+		}
+		outfile << "\n";
+		outfile.close();
+
+		outfile.open(filename);
+		outfile << "set style histogram cluster\n";
+		outfile << "set style data histogram\n";
+		outfile << "set boxwidth 0.9\n";
+		outfile << "plot '" << data_file << "'\n";
+	}
+
+	void BoxPlot(std::vector<double> data) {
+		// TODO write a function for this
+		std::ofstream outfile(data_file);
+		for (int i = 0; i < data.size(); ++i) {
+			outfile << data[i] << "\n";
+		}
+		outfile << "\n";
+		outfile.close();
+
+		outfile.open(filename);
+		outfile << "set style fill solid 0.5 border -1\n";
+		outfile << "set style boxplot outliers pointtype 7\n";
+		outfile << "set style data boxplot\n";
+		outfile << "set boxwidth 0.5\n";
+		outfile << "set pointsize 0.5\n";
+		outfile << "set xrange [*:*]\n";
+		outfile << "set yrange [*:*]\n";
+		outfile << "set xtics auto\n";
+		outfile << "set size 0.8\n";
+		outfile << "plot '" << data_file << "' lc \"sea-green\"\n";
 	}
 
 	/**
